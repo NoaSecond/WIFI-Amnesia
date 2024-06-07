@@ -46,7 +46,6 @@ for /f "delims=" %%a in (2.txt) do (
 )
 
 :: On lit 3.txt et on met dans 4.txt les lignes 5 et 10 après chaque "=================================="
-:: ================== ISSUE : IL N'Y A QUE 1 PROFIL QUI EST AFFICHE ==================
 :: ================== ISSUE : DANS 3.txt CERTAINS PROFILS N'ONT PAS DE MDP OU ALORS ON LES INFORMATIONS AUX MAUVAISES LIGNES ==================
 echo [Step 4/5] Displaying wifi profiles information...
 set lineCount=0
