@@ -11,23 +11,23 @@ color E
 for /f "delims=: tokens=*" %%A in ('findstr /b ::: "%~f0"') do @echo(%%A
 
 
-:: Liste les profils wifi
+:: Listing wifi profiles
 echo [Step 1/5] Listing wifi profiles...
 netsh wlan show profiles >> 0amnesia.txt
 
-:: Pour chaque profil wifi, on affiche les informations
+:: For each wifi profile, we display the information
 echo [Step 2/5] Getting wifi profiles information...
 for /f "skip=9 tokens=1,2 delims=:" %%i in ('netsh wlan show profiles') do (
     netsh wlan show profile %%j key=clear >> 1amnesia.txt
 )
 
-:: On nettoie et on garde les lignes qui contiennent " : " et on les met dans 2amnesia.txt
+:: Clean and keep lines that contain " : " and put them in 2amnesia.txt
 echo [Step 3/5] Cleaning wifi profiles information...
 for /f "delims=" %%k in ('findstr /c:" : " 1amnesia.txt') do (
     echo %%k >> 2amnesia.txt
 )
 
-:: On lit la première ligne de 2amnesia.txt et on l'enregistre dans la variable firstLine
+:: Read the first line of 2amnesia.txt and save it in the variable firstLine
 set "firstLine="
 for /f "delims=" %%a in (2amnesia.txt) do (
     set "firstLine=%%a"
@@ -35,7 +35,7 @@ for /f "delims=" %%a in (2amnesia.txt) do (
 )
 :doneReadingFirstLine
 
-:: On lit 2amnesia.txt, et à chaque fois qu'on croise une ligne égale à la variable firstLine, on rajoute une ligne "==================================" pour séparer les profils puis on enregistre dans 3amnesia.txt
+:: Read 2amnesia.txt, and each time we find a line equal to the variable firstLine, we add a line "==================================" to separate the profiles and save it in 3amnesia.txt
 setlocal enabledelayedexpansion
 for /f "delims=" %%a in (2amnesia.txt) do (
     if %%a==!firstLine! (
@@ -45,8 +45,7 @@ for /f "delims=" %%a in (2amnesia.txt) do (
     )
 )
 
-:: On lit 3amnesia.txt et on met dans 4amnesia.txt les lignes 5 et 10 après chaque "=================================="
-:: ================== ISSUE : DANS 3amnesia.txt CERTAINS PROFILS N'ONT PAS DE MDP OU ALORS ON LES INFORMATIONS AUX MAUVAISES LIGNES ==================
+:: Read 3amnesia.txt and put in 4amnesia.txt the lines 5 and 10 after each "=================================="
 echo [Step 4/5] Displaying wifi profiles information...
 set lineCount=0
 set profileCount=0
@@ -66,7 +65,7 @@ for /f "delims=" %%b in (3amnesia.txt) do (
 )
 endlocal
 
-:: Nettoyage des fichiers temporaires
+:: Cleaning temporary files
 echo [Step 5/5] Cleaning temporary files...
 del 0amnesia.txt
 del 1amnesia.txt
