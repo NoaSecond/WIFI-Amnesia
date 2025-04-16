@@ -46,20 +46,21 @@ for /f "tokens=1* delims=." %%A in (SSID_Amnesia.tmp) do (
 echo.
 
 :: [Step 4] User input for profile selection
+:step4
 echo [Step 4/6] Please select a Wi-Fi profile to display its information:
 set /p "choice=Select a number (1-%i%): "
 set "profile=!ssid[%choice%]!"
 
 if not defined profile (
-    echo Numéro invalide. Fin du script.
-    goto :end
+    echo Invalid choice.
+    echo.
+    goto :step4
 )
 echo.
 
 :: [Step 5] Display profile information
 echo [Step 5/6] Information for profile "!profile!":
 netsh wlan show profile name="!profile!" key=clear | findstr /C:"Nom du SSID" /C:"Contenu de la"
-:end
 echo.
 
 :: [Step 6] Cleaning temporary files
