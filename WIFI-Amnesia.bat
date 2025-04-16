@@ -60,7 +60,19 @@ echo.
 
 :: [Step 5] Display profile information
 echo [Step 5/6] Information for profile "!profile!":
-netsh wlan show profile name="!profile!" key=clear | findstr /C:"Nom du SSID" /C:"Contenu de la"
+netsh wlan show profile name="!profile!" key=clear | findstr /C:"Nom du SSID" /C:"Contenu de la" > profile_info.tmp
+
+:: Check if password is found. If not, display a message.
+findstr /C:"Contenu de la" profile_info.tmp >nul
+if errorlevel 1 (
+    echo No password found for this profile.
+    echo.
+    goto :step4
+) else (
+    type profile_info.tmp
+)
+
+del profile_info.tmp >nul 2>&1
 echo.
 
 :: [Step 6] Cleaning temporary files
