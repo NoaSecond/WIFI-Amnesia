@@ -8,68 +8,63 @@ color E
 ::: \  /\  /_| |_| |    _| |_           | | | || |  | || |\  || |___/\__/ /_| |_| | | |
 :::  \/  \/ \___/\_|    \___/           \_| |_/\_|  |_/\_| \_/\____/\____/ \___/\_| |_/
 ::: Developed by Noa Second - www.noasecond.com
+
 for /f "delims=: tokens=*" %%A in ('findstr /b ::: "%~f0"') do @echo(%%A
-
-
-:: Listing wifi profiles
-echo [Step 1/5] Listing wifi profiles...
-netsh wlan show profiles >> 0amnesia.txt
-
-:: For each wifi profile, we display the information
-echo [Step 2/5] Getting wifi profiles information...
-for /f "skip=9 tokens=1,2 delims=:" %%i in ('netsh wlan show profiles') do (
-    netsh wlan show profile %%j key=clear >> 1amnesia.txt
-)
-
-:: Clean and keep lines that contain " : " and put them in 2amnesia.txt
-echo [Step 3/5] Cleaning wifi profiles information...
-for /f "delims=" %%k in ('findstr /c:" : " 1amnesia.txt') do (
-    echo %%k >> 2amnesia.txt
-)
-
-:: Read the first line of 2amnesia.txt and save it in the variable firstLine
-set "firstLine="
-for /f "delims=" %%a in (2amnesia.txt) do (
-    set "firstLine=%%a"
-    goto :doneReadingFirstLine
-)
-:doneReadingFirstLine
-
-:: Read 2amnesia.txt, and each time we find a line equal to the variable firstLine, we add a line "==================================" to separate the profiles and save it in 3amnesia.txt
 setlocal enabledelayedexpansion
-for /f "delims=" %%a in (2amnesia.txt) do (
-    if %%a==!firstLine! (
-        echo ================================== >> 3amnesia.txt
-    ) else (
-        echo %%a >> 3amnesia.txt
-    )
-)
+echo.
 
-:: Read 3amnesia.txt and put in 4amnesia.txt the lines 5 and 10 after each "=================================="
-echo [Step 4/5] Displaying wifi profiles information...
-set lineCount=0
-set profileCount=0
-for /f "delims=" %%b in (3amnesia.txt) do (
-    if %%b==================================== (
-        set /a profileCount+=1
-        set lineCount=0
-    ) else (
-        set /a lineCount+=1
-        if !lineCount! equ 5 (
-            echo Profil !profileCount! : %%b
-        ) 
-        if !lineCount! equ 10 (
-            echo Profil !profileCount! : %%b
-        )
-    )
-)
-endlocal
+:: [Step 0] Cleaning temporary files
+echo [Step 0/6] Cleaning temporary files...
+del profiles_Amnesia.tmp >nul 2>&1
+del SSID_Amnesia.tmp >nul 2>&1
+echo.
 
-:: Cleaning temporary files
-echo [Step 5/5] Cleaning temporary files...
-del 0amnesia.txt
-del 1amnesia.txt
-del 2amnesia.txt
-del 3amnesia.txt
+:: [Step 1] Listing Wi-Fi profiles
+echo [Step 1/6] Listing Wi-Fi profiles...
+netsh wlan show profiles > profiles_Amnesia.tmp
+echo.
+
+:: [Step 2] Extracting SSID names
+echo [Step 2/6] Extracting SSID names...
+set i=0
+del SSID_Amnesia.tmp >nul 2>&1
+
+for /f "tokens=1,* delims=:" %%A in ('findstr /C:"Profil Tous les utilisateurs" profiles_Amnesia.tmp') do (
+    set "ssid=%%B"
+    set "ssid=!ssid:~1!"
+    set /a i+=1
+    echo !i!.!ssid!>>SSID_Amnesia.tmp
+    set "ssid[!i!]=!ssid!"
+)
+echo.
+
+:: [Step 3] Display available profiles
+echo [Step 3/6] Available Wi-Fi profiles:
+for /f "tokens=1* delims=." %%A in (SSID_Amnesia.tmp) do (
+    echo [%%A] - %%B
+)
+echo.
+
+:: [Step 4] User input for profile selection
+echo [Step 4/6] Please select a Wi-Fi profile to display its information:
+set /p "choice=Select a number (1-%i%): "
+set "profile=!ssid[%choice%]!"
+
+if not defined profile (
+    echo Numéro invalide. Fin du script.
+    goto :end
+)
+echo.
+
+:: [Step 5] Display profile information
+echo [Step 5/6] Information for profile "!profile!":
+netsh wlan show profile name="!profile!" key=clear | findstr /C:"Nom du SSID" /C:"Contenu de la"
+:end
+echo.
+
+:: [Step 6] Cleaning temporary files
+echo [Step 6/6] Cleaning temporary files...
+del profiles_Amnesia.tmp >nul 2>&1
+del SSID_Amnesia.tmp >nul 2>&1
 
 pause
