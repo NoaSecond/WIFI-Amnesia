@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 color E
 
 :::  _    _ ___________ _____             ___  ___  ___ _   _  _____ _____ _____  ___  
@@ -31,7 +32,7 @@ for /f "tokens=1,* delims=:" %%A in ('findstr /C:"Profil Tous les utilisateurs" 
     set "ssid=%%B"
     set "ssid=!ssid:~1!"
     set /a i+=1
-    echo !i!.!ssid!>>SSID_Amnesia.tmp
+    >>SSID_Amnesia.tmp echo !i!.!ssid!
     set "ssid[!i!]=!ssid!"
 )
 
