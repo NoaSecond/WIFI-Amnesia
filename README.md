@@ -25,3 +25,7 @@ This tool is intended for educational purposes and personal use only. The author
 ## Notes
 - Ensure you have administrative privileges to run the script.
 - Use this tool responsibly and only on devices you own or have explicit permission to access.
+
+## Additional Disclaimer
+- This script is designed to work only on computers with the Windows operating system set to the **Français** language. If your system is configured in a different language, the script may not function as intended.
+- Ensure your system meets this requirement before using the tool.
