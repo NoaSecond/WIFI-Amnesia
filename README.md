@@ -18,9 +18,9 @@ This tool is intended for educational purposes and personal use only. The author
 1. **Launch the Script**: Double-click on the `WIFI-Amnesia.bat` file to execute the script.
 2. **Follow the Prompts**: The script will guide you through the process of retrieving saved WIFI passwords on your Windows PC.
 3. **View Available Options**:
-  - **List All Saved Networks**: The script will display all WIFI networks saved on your computer.
-  - **Retrieve Password for a Specific Network**: You can select a specific network to view its password.
-  - **Export All Network Details**: Optionally, export all saved network details, including passwords, to a text file for backup purposes.
+  - [1] Display password for a specific profile
+  - [2] Extract all passwords to a file
+  - [3] Extract all infos for each profile
 
 ## Notes
 - Ensure you have administrative privileges to run the script.
